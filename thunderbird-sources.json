@@ -464,8 +464,8 @@
     },
     {
         "type": "archive",
-        "url": "https://archive.mozilla.org/pub/thunderbird/releases/78.2.1/source/thunderbird-78.2.1.source.tar.xz",
-        "sha256": "1a231291cbad76b505ba1451efc543ce2651bcb481fdf26e6300b918c7ee903d"
+        "url": "https://archive.mozilla.org/pub/thunderbird/releases/77.0b3/source/thunderbird-77.0b3.source.tar.xz",
+        "sha256": "b6e7bcb38f2081ea55d998b581d44741bad4f8a442e2c80d5dcf2f388486f517"
     },
     {
         "type": "dir",
