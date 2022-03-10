@@ -252,10 +252,24 @@
                 "for i in 16 22 24 32 48 64 128 256;do install -Dm644 comm/mail/branding/thunderbird/default${i}.png /app/share/icons/hicolor/${i}x${i}/apps/thunderbird.png;done",
                 "install -Dm644 comm/mail/branding/thunderbird/TB-symbolic.svg /app/share/icons/hicolor/symbolic/apps/thunderbird-symbolic.svg",
                 "install -Dm644 org.mozilla.Thunderbird.desktop /app/share/applications/org.mozilla.Thunderbird.desktop",
-                "install -Dm644 org.mozilla.Thunderbird.appdata.xml /app/share/metainfo/org.mozilla.Thunderbird.appdata.xml"
+                "install -Dm644 org.mozilla.Thunderbird.appdata.xml /app/share/metainfo/org.mozilla.Thunderbird.appdata.xml",
+
+                "mkdir /app/src",
+                "cp -ar --reflink=auto comm/mail/extensions/acme/acme-tiny /app/src/"
             ],
             "sources": [
                 "thunderbird-sources.json",
+                {
+                    "type": "patch",
+                    "path": "acmesmime.patch",
+                    "options": [
+                        "--directory=comm/"
+                    ]
+                },
+                {
+                    "type": "patch",
+                    "path": "firefoxcerts.patch"
+                },
                 {
                     "type": "file",
                     "path": "mozconfig"
