@@ -7,6 +7,19 @@
         "org.freedesktop.Sdk.Extension.rust-stable",
         "org.freedesktop.Sdk.Extension.node12"
     ],
+    "build-options":{
+        /* This is for making the build faster. I hope it works... */
+        "strip": false,
+        "no-debuginfo": true,
+        "no-debuginfo-compression": true,
+        "x-prepend-path": "/app/sccache/bin/",
+        "x-env":{
+            "SCCACHE_DIR": "/run/ccache/sccache/",
+            "XCC": "/app/sccache/bin/cc",
+            "XC++": "/app/sccache/bin/c++",
+            "XCPP": "/app/sccache/bin/c++"
+        }
+    },
     "command": "thunderbird",
     "rename-icon": "thunderbird",
     "finish-args": [
@@ -54,6 +67,36 @@
         "*.la", "*.a"
     ],
     "modules": [
+        {
+            "name": "sccache",
+            "disabled": false,
+            "buildsystem": "simple",
+            "build-commands": [
+                "install -Dma+rwx sccache /app/bin/sccache",
+                "./install-wrappers.sh"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/mozilla/sccache/releases/download/v0.2.15/sccache-v0.2.15-x86_64-unknown-linux-musl.tar.gz",
+                    "sha256": "e5d03a9aa3b9fac7e490391bbe22d4f42c840d31ef9eaf127a03101930cbb7ca"
+                },
+                {
+                    "type": "script",
+                    "commands": [
+                        "for x in gcc c++ cxx cpp cc; do  sed 's,gcc,$x,g' <  gcc  > $x ; install -Dma+rwx $x /app/sccache/bin/$x ; done"
+                    ],
+                    "dest-filename": "install-wrappers.sh"
+                },
+                {
+                    "type": "script",
+                    "commands": [
+                        "sscache /usr/bin/gcc $@"
+                    ],
+                    "dest-filename": "gcc"
+                }
+            ]
+        },
         "shared-modules/gtk2/gtk2.json",
         "shared-modules/dbus-glib/dbus-glib-0.110.json",
             {
@@ -192,7 +235,9 @@
                 "env":{
                     "TERM": "linux",
                     "CARGO_HOME": "/run/build/Thunderbird/cargo",
-                    "npm_config_nodedir": "/usr/lib/sdk/node12"
+                    "npm_config_nodedir": "/usr/lib/sdk/node12",
+                    "RUSTC_WRAPPER": "/app/bin/sccache",
+                    "SCCACHE_DIR": "/run/ccache/sccache/"
                 }
             },
             "build-commands": [

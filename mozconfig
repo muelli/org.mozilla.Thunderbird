@@ -1,5 +1,6 @@
 # General configuration options
 ac_add_options --prefix=/app
+ac_add_options --with-ccache=sccache
 ac_add_options --enable-release
 ac_add_options --enable-official-branding
 export MOZ_NOSPAM=1
@@ -60,3 +61,4 @@ export MOZILLA_OFFICIAL=1
 
 # Fix python virtualenv
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/build-dir
+mk_add_options MOZ_OBJDIR=/run/ccache/moz-obj
