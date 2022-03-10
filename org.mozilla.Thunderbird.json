@@ -244,6 +244,37 @@
                     ]
                 }
             ]
+        },
+        {
+            "name": "thunderbird",
+            "disabled": true,
+            "buildsystem": "simple",
+            "build-options":{
+                "append-path": "/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/node12/bin",
+                "append-ld-library-path": "/usr/lib/sdk/node12/lib",
+                "env":{
+                    "TERM": "linux",
+                    "CARGO_HOME": "/run/build/Thunderbird/cargo",
+                    "npm_config_nodedir": "/usr/lib/sdk/node12"
+                }
+            },
+            "build-commands": [
+                "cp -ar --reflink=auto /app/src/. .",
+                "export MOZ_BUILD_DATE=$(head -1 ./sourcestamp.txt); ./mach configure; ./mach build -v; ./mach install",
+                "sccache --stats",
+                "rm -f /app/bin/thunderbird",
+                "install -Dm755 thunderbird-wrapper /app/bin/thunderbird",
+                "install -Dm644 policies.json /app/lib/thunderbird/distribution/policies.json",
+                "install -Dm644 distribution.ini /app/lib/thunderbird/distribution/distribution.ini",
+                "install -Dm644 default-preferences.js /app/lib/thunderbird/defaults/pref/default-preferences.js"
+            ],
+            "sources": [
+                {
+                    "type": "dir",
+                    "path": "/media/muelli/backup/mozilla-central/comm",
+                    "dest": "comm"
+                }
+            ]
         }
     ]
 }
